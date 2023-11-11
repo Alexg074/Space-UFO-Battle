@@ -1,11 +1,12 @@
 var pid, score = 0,
     themissile, theufo,
-    ufo_hstep = 10, firedMissile = false;
+    ufo_hstep = 10,
+    firedMissile = false;
 
     // Get the preferences from the local storage and apply them to the Play Page
 var time = parseInt(localStorage.getItem('time'));
 var ufos_count = parseInt(localStorage.getItem('ufos'));
-
+// var gameOver = false;
 
 // var ufos_array = new Array(5);
 // enable as many UFOs as the value of "ufos" variable
@@ -20,7 +21,6 @@ var ufos_count = parseInt(localStorage.getItem('ufos'));
 var ufoMovementInterval;
 
 function UFOlaunch() {
-    //Supress comment signs in next line
     // each 25milisec the MoveUFO function will be called
     // and the UFO will be moved 5px
     ufoMovementInterval = setInterval(MoveUFO, 25);
@@ -62,7 +62,7 @@ function checkforaHit() {
         height_m = parseInt(themissile.style.height),
         hit = false;
 
-    // Detect if the missile hits ufo:
+    // Detect if the missile hits an UFO:
     // - 1st condition => vertical condition + avoid counting as a hit when the missile is still
     // on screen but passed the UFO height and didn t hit it
     // - 2nd + 3rd condition => count as a hit only when the missile is between the left and right
@@ -82,13 +82,12 @@ function checkforaHit() {
 
 function launch() {
     var uLimit = window.innerHeight,
-        // vertical position of the 
-        // ! whenever the bottom of the rocket is over the upper window limit => reset the position back to 0
         vpos_m = parseInt(themissile.style.bottom),
-        vstep = 7;
-        // missile speed (vertical step)
+        vstep = 6;
+        // Missile speed (vertical step)
 
-    // If the misile gets to the top of the screen
+    // if (!gameOver)
+    // If the misile gets to the top of the screen, reset the vertical position to 0
     if (vpos_m >= uLimit) {
         clearInterval(pid);
         vpos_m = 0 + 'px';
@@ -101,9 +100,9 @@ function launch() {
         clearInterval(pid);
         vpos_m = 0 + 'px';
         firedMissile = false;
-        // Step 2: Update the global variable
+        // Step 2: Update the global score variable
         score += 100;
-        // Step 3: Update punctuation in the panel
+        // Step 3: Update score in the panel
         document.getElementById('points').innerHTML = score;
         // Step 4: Show the explosion image for the hit (colission)
         document.getElementById('ufo').src = '../imgs/explosion.gif';
@@ -124,20 +123,6 @@ function launch() {
         vpos_m += vstep;
         vpos_m = vpos_m + 'px';
     }
-    // TODO
-    //if vpos_m is higher than upperlimit
-    //stop the missile
-    // else
-    // do the missile to move vstep pixels up    
-    // if (vpos_m < uLimit) {
-    //     vpos_m += vstep;
-    //     vpos_m = vpos_m + 'px';
-    // } else {
-    //     clearInterval(pid);
-    //     vpos_m = 0 + 'px';
-    //     firedMissile = false;
-    // }
-    
     // then assigning it to the object property
     themissile.style.bottom = vpos_m;
 }
@@ -171,7 +156,6 @@ function keyboardController(theEvent) {
     let interval = 15;
     let code = theEvent.key;
     if (!firedMissile) {
-    // console.log("The pressed key is: " + code);
         switch (code) {
             case 'ArrowRight':
                 moveMissileRight();
@@ -194,33 +178,41 @@ window.onload = function() {
     document.onkeydown = keyboardController;
     document.addEventListener('click', keyboardController, false);
 
-    // document.addEventListener('keydown', keyboardController);
-    // prepare keyboardController to be executed when a key is hited on the document
+    // Prepare keyboardController to be executed when a key is hited on the document
     UFOlaunch();
 
+    // If no time preference is set, the default time is 60 seconds
     createTimer(time || 60);
 }
 
-// // 
-function createTimer(time) {
-    // write the JS code
-    var timer = setInterval (function() {
-        time--;
-        document.getElementById('timer').innerHTML = time;
-        if (time == 0) {
-            clearInterval(timer);
-            // TODO: Clear interval for UFOs also
-            // Alert the score when the time is up
-            let finalScore = getFinalScore(score, time, ufos_count);
-            console.log(finalScore);
-            alert("Congrats! Your final score is: " + finalScore);
 
-            // Block the user for resuming playing
-            // - Block the missile from being moved
+// Implement the gameplay timer
+function createTimer(time) {
+    let selectedTime = time;
+    var timer = setInterval (function() {
+        // time--;
+        document.getElementById('timer').innerHTML = --time;
+        if (time == 0) {
+            // gameOver = true;
+            clearInterval(timer);
+            // Block the user for resuming playing - lock the ufo and missile
+            clearInterval(ufoMovementInterval);
             document.removeEventListener('click', keyboardController, false);
             document.onkeydown = null;
-            // - Block the UFO from moving
-            clearInterval(ufoMovementInterval);
+            
+            // Alert the score when the time is up
+            // - If there are any pending updates to the score from a hit that occurred right as the
+            // timer reached zero => processed the updates before the final score calculation and alert
+            setTimeout(function() {
+                    let finalScore = getFinalScore(score, selectedTime, ufos_count);
+                    console.log(finalScore);
+                    alert("Congrats! Your final score is: " + finalScore);
+            }, 100);
+
+            // - Slight delay to make sure the last hit is processed before the final score is calculated,
+            // in case an ufo is hit last minute
+
+            
         }
     }, 1000);
     // decrement the time every 1 second
@@ -239,6 +231,8 @@ function getFinalScore(score, time, ufos_count) {
     }
 
     document.getElementById('points').innerHTML = score;
+
+    return score;
 }
 
 

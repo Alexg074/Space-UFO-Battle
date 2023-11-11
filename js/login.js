@@ -50,43 +50,41 @@
 
 
 // fetch version
-// GOAL: CONNECT TO A SERVER AND GET INFORMATION
-// EXAMPLE TO PRACTICE: random_users
 function dologin(){ 
-    let url = "http://wd.etsisi.upm.es:10000/users/login";
-    let theuser = document.getElementById('username').value;
-    let thepwd = document.getElementById('pwd').value;
-    url += '?username=' + theuser + '&password=' + thepwd;
-  
-    let options = {
-       method: 'GET'  
-      };
-    
-    fetch(url, options)
-    // we receive first the response object - the whole object (containing the header, the body etc) !!
-    // then with the response object => return the response object in a JSON format
-      // .then((responseObject)=>{return responseObject.headers.get('Authorization')})
+	let url = "http://wd.etsisi.upm.es:10000/users/login";
+	let theuser = document.getElementById('username').value;
+	let thepwd = document.getElementById('pwd').value;
+	url += '?username=' + theuser + '&password=' + thepwd;
 
-      // AICI TOKEN UL E AFISAT IN CADRANUL ALBASTRU
-      .then((responseObject) => {inf = responseObject.headers.get('Authorization')
-                                // get the header response
-                                console.log(inf);
-                                return responseObject.json();
-                                })
-      // 2nd .then: Waits for the first then to be executed
-      // 2nd then: Receiving what the 1st get returns !!
+	let options = {
+		method: 'GET'  
+	};
 
-      // ! Store the login token in the local storage
-      .then ((headerValue) => {localStorage.setItem('token', headerValue)});
+	fetch(url, options)
+	// we receive first the response object - the whole object (containing the header, the body etc) !!
+	// then with the response object => return the response object in a JSON format
+	// .then((responseObject)=>{return responseObject.headers.get('Authorization')})
+
+	// AICI TOKEN UL E AFISAT IN CADRANUL ALBASTRU
+	.then((responseObject) => {inf = responseObject.headers.get('Authorization')
+							// get the header response
+							console.log(inf);
+							return responseObject.json();
+							})
+	// 2nd .then: Waits for the first then to be executed
+	// 2nd then: Receiving what the 1st get returns !!
+
+	// ! Store the login token in the local storage
+	.then ((headerValue) => {localStorage.setItem('token', headerValue)});
+
+	// callback function executed whenever the response gets back - move the console log inside the function
+	// .then((responseObject)=>{inf = responseObject.json()} return responseObject.headers.get('Authorization'))
+}
   
-      // callback function executed whenever the response gets back - move the console log inside the function
-      // .then((responseObject)=>{inf = responseObject.json()} return responseObject.headers.get('Authorization'))
-  }
   
-  
-  window.onload = function(){
-    document.getElementById('login-button').onclick = dologin;
-  }
+window.onload = function(){
+	document.getElementById('login-button').onclick = dologin;
+}
   
   
   
