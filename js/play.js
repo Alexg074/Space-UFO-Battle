@@ -5,10 +5,9 @@ var pid, score = 0,
 
 var navbarHeight, missileHeight, screenHeight, screenWidth, freeScreenHeight;
 
-// Get the game preferences from the local storage
-// No time selected => default 60 seconds
+// Get the game preferences from the local storage / default values
 var time = parseInt(localStorage.getItem('time')) || 60;
-var ufos_count = parseInt(localStorage.getItem('ufos'));
+var ufos_count = parseInt(localStorage.getItem('ufos')) || 1;
 
 // Function that creates multiple UFOs based on user preferences
 function createUFOs(ufos_count) {
@@ -23,9 +22,9 @@ function createUFOs(ufos_count) {
 
         // Make each UFO move random horizontally (left or right)
 		if (Math.random() < 0.5) {
-            ufo.hstep = -10;
+            ufo.hstep = -5;
         } else {
-            ufo.hstep = 10;
+            ufo.hstep = 5;
         }
 
 		// Append the new ufo to the body of the document, after the HTML is fully loaded
@@ -63,21 +62,19 @@ function MoveUFO(ufo) {
 	// Update the left position of the UFO with the new step
 	hpos_ufo += ufo.hstep;
     ufo.style.left = hpos_ufo + 'px';
-
 }
 
-// Function which checks if there is a collision between missile and UFOs
+// Function which checks for collisions between the missile and UFOs
 function checkforaHit() {
     var hitUFO = null;
 	// DOMRect object to return the position/size attributes of the missile
     var missileBounds = themissile.getBoundingClientRect();
-	// console.log(missileBounds);
 
-    for (var i = 0; i < ufos.length; i++) {
+    for (var i = 0; i < ufos_count; i++) {
         var ufo = ufos[i];
         var ufoBounds = ufo.getBoundingClientRect();
 
-        // Simple AABB collision detection
+        // Check each margin of the missile against the UFO => detect if there is a collision
         if (missileBounds.left < ufoBounds.right &&
             missileBounds.right > ufoBounds.left &&
             missileBounds.top < ufoBounds.bottom &&
@@ -129,6 +126,7 @@ function pullTrigger() {
     }    
 }
 
+// Handle the hit (collision) between missile and an UFO
 function handleHit(ufo) {
 	// Step 1: Stop the missile
 	clearInterval(pid);
@@ -146,9 +144,10 @@ function handleHit(ufo) {
 	}, 1000)
 }
 
+// Functions to move the missile horizontally
 function moveMissileRight() {
     var rLimit = window.innerWidth,
-        hpos_m, misWidth, hstep = 20;
+        hpos_m, misWidth, hstep = 15;
 
     // Get the actual values of the missile's attributes 
     hpos_m = parseInt(themissile.style.left);
@@ -164,7 +163,7 @@ function moveMissileRight() {
 }
 
 function moveMissileLeft() {
-    var hpos_m, hstep = 20;
+    var hpos_m, hstep = 15;
     hpos_m = parseInt(themissile.style.left);
 
     if (hpos_m > 0) {
@@ -208,7 +207,7 @@ window.onload = function() {
     document.onkeydown = keyboardController;
 }
 
-// Function to create game timer
+// Create game timer
 function createTimer(time) {
 	let selectedTime = time;
     var timer = setInterval (function() {
@@ -227,14 +226,13 @@ function createTimer(time) {
                     console.log(finalScore);
                     alert("Congrats! Your final score is: " + finalScore);
             }, 100);
-
-            // - Slight delay to make sure the last hit is processed before the final score is calculated,
-            // in case an ufo is hit last sec
+            // Slight delay to make sure the last hit is processed before the final score is calculated,
+            // in case an ufo is hit last second
         }
     }, 1000);
 }
 
-// Function to compute final score
+// Compute final score
 function getFinalScore(score, time, ufos_count) {
 	if (time == 120) {
         score /= 2;
@@ -247,7 +245,6 @@ function getFinalScore(score, time, ufos_count) {
     }
 
     document.getElementById('points').innerHTML = score;
-
     return score;
 }
 

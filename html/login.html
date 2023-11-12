@@ -18,75 +18,67 @@
     <title> UFO Battle Game - Login </title>
     
 </head>
-<body>
-    <div id = "navbar">
-        <img src = "../imgs/upm_logo.png" id = "navbar-logo" alt = "U.P.M. / Ufo Battle Logo" >
+    <body>
+        <!-- The div for the whole navbar -->
+        <div id = "navbar">
+            <!-- UPM logo -->
+            <img src = "../imgs/upm_logo.png" id = "navbar-logo" alt = "U.P.M. / Ufo Battle Logo" >
 
-        <div class = "menu-group">
-            
-            <div>
-                <a href = "home.html" class = "menu-button"> Home </a>
-            </div>
-
-            <div>
-                <a href = "preferences.html" class = "menu-button"> Preferences </a>
-            </div>
-
-            <div> 
-                <a href = "play.html" class = "menu-button"> Play </a>
-            </div>
-
-            <div>
-                <a href = "records.html" class="menu-button"> Records </a>
-            </div>
-        </div>    
-
-        <div class="right-group">
-            <div>
-                <a href = "register.html" class = "menu-button"> Register </a>
-            </div>
-
-            <div>
-                <a href = "login.html" class = "menu-button"> Login </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Specific code for Login Page -->
-
-    <div class = "preferences">
-        <h1> User Credentials </h1>
-        <div class = "set-preferences">
-            <!-- <div class = "login-fields">
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label"> Username </label>
-                    <input type="username" class="form-control" id="exampleFormControlInput1">
+            <!-- Left Menu Group -->
+            <div class = "menu-group">
+                
+                <div>
+                    <a href = "home.html" class = "menu-button"> Home </a>
                 </div>
 
-                <label for="inputPassword5" class="form-label"> Password </label>
-                <input type="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">
-
-                <div class = "submit-login">
-                    <button type="submit" class="submit-login-button"> Login </button>
+                <div>
+                    <a href = "preferences.html" class = "menu-button"> Preferences </a>
                 </div>
-            </div> -->
 
-            <!-- IMPROVE LOGIN HTML + CSS - make it baby blue -->
-            <div id='login-fields'>
-                <form >
-                    <fieldset> 
-                        <legend>User login</legend>
-                        User name
-                        <input type='text' id='username' >
-                        <br /><br />
-                        Password: 
-                        <input type='password' name='pwd' id='pwd'><br /><br />
-                        <button type='button' id='login-button'> Login </button>
-                    </fieldset>     
-                </form>
-            </div> 
+                <div> 
+                    <a href = "play.html" class = "menu-button"> Play </a>
+                </div>
+
+                <div>
+                    <a href = "records.html" class="menu-button"> Records </a>
+                </div>
+            </div>    
+
+            <!-- Right Menu Group -->
+            <div class="right-group">
+                <div>
+                    <a href = "register.html" class = "menu-button"> Register </a>
+                </div>
+
+                <div>
+                    <a href = "login.html" class = "menu-button"> Login </a>
+                </div>
+            </div>
         </div>
-    </div>
 
-</body>
+     <!-- Specific code for Login Page -->
+        <div class = "home-div">
+            <div class = "header">
+                <div class = "pref-header">
+                    <h1> User Credentials </h1>
+                </div>
+            </div>
+        
+            <form id = 'login-form'>
+                <div class = "pref-fields">
+                    <div class = "form-fields">
+                        <label> Username: </label>
+                        <input type = 'text' id = 'username' class = "form-control">
+
+                        <label> Password: </label>
+                        <input type = 'password' id = 'pwd' class = "form-control">
+                    </div>
+
+                    <button type = "button" id = 'login-button'> Login </button>
+
+                </div>
+            </form>
+        </div>
+
+    </body>
 </html>
